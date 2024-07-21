@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しりとりゲーム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>しりとりゲーム</h1>
+        <canvas id="game-canvas"></canvas>
+        <input type="text" id="input-word" placeholder="言葉を入力してください">
+        <button id="submit-word">送信</button>
+        <div id="timer">タイマー: <span id="time-left">60</span>秒</div>
+        <div id="score">スコア: <span id="score-value">0</span></div>
+        <div id="hint">ヒント: <span id="hint-value"></span></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
