@@ -1,28 +1,61 @@
-const drawCharactersInCircle = () => {
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const inputWord = document.getElementById('input-word');
+const submitButton = document.getElementById('submit-word');
+const timerDisplay = document.getElementById('time-left');
+const scoreDisplay = document.getElementById('score-value');
+const hintDisplay = document.getElementById('hint-value');
+
+canvas.width = 400;
+canvas.height = 400;
+
+let words = [];
+let score = 0;
+let timeLeft = 60;
+let timer;
+
+const startTimer = () => {
+    timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert('ゲームオーバー！スコア: ' + score);
+        }
+    }, 1000);
+}
+
+const drawCharacters = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let angle = 0;
     const radius = 150;
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
+    const characters = words.join('');
 
-    const allCharacters = words.join('');
-
-    allCharacters.split('').forEach(char => {
+    for (let i = 0; i < characters.length; i++) {
+        const char = characters[i];
         ctx.save();
         ctx.translate(centerX, centerY);
         ctx.rotate(angle);
         ctx.textAlign = 'center';
         ctx.fillText(char, radius, 0);
         ctx.restore();
-        angle += (2 * Math.PI) / allCharacters.length;
-    });
+        angle += (2 * Math.PI) / characters.length;
+    }
+}
+
+const isValidWord = (newWord) => {
+    if (words.length === 0) return true;
+    const lastWord = words[words.length - 1];
+    return lastWord[lastWord.length - 1] === newWord[0];
 }
 
 submitButton.addEventListener('click', () => {
     const newWord = inputWord.value.trim();
     if (newWord && isValidWord(newWord)) {
         words.push(newWord);
-        drawCharactersInCircle();
+        drawCharacters();
         score++;
         scoreDisplay.textContent = score;
         inputWord.value = '';
