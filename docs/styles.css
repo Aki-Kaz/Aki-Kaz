@@ -4,7 +4,7 @@ body {
     background-color: #f0f0f0;
 }
 
-#game-container {
+#intro-container, #game-container {
     margin: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -37,4 +37,9 @@ button {
 #timer, #score, #hint {
     margin: 10px;
     font-size: 18px;
+}
+
+#completed-circles {
+    position: absolute;
+    left: -9999px;
 }
