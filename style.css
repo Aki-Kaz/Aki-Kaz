@@ -1,0 +1,28 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#container3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#container1, #container2, #container4 {
+  display: none;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
