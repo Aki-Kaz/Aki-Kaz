@@ -12,6 +12,7 @@ const sketch2 = (p) => {
     font = p.loadFont("YuseiMagic-Regular.ttf");
   };
 
+  
   p.setup = () => {
     p.createCanvas(800, 250);
     p.background(255, 255, 255);
@@ -30,7 +31,7 @@ const sketch2 = (p) => {
         console.error("マイクアクセスが拒否されました:", err);
       });
     
-
+    
     p.textFont(font);
     p.text("話しかけて！数字のみを認識します", 10, 50);
     
@@ -79,11 +80,10 @@ const sketch2 = (p) => {
 
   
   const parseResult = () => {
-    let mostrecentword = myRec.resultString;
-    let numbers = mostrecentword.match(/\d+/g);
-    recognizedNumber = numbers ? numbers.join(", ") : "";
-    
     if (voiceRecognitionBool == true) {
+      let mostrecentword = myRec.resultString;
+      let numbers = mostrecentword.match(/\d+/g);
+      recognizedNumber = numbers ? numbers.join(", ") : "";
       //console.log("テスト");
       voiceNumber = Number(recognizedNumber);
       console.log("voiceNumber:",voiceNumber);
