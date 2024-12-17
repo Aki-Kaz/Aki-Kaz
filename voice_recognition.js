@@ -14,7 +14,7 @@ const sketch2 = (p) => {
 
   
   p.setup = () => {
-    p.createCanvas(800, 250);
+    p.createCanvas(800, 300);
     p.background(255, 255, 255);
 
     // マイクの権限を要求する
@@ -61,7 +61,7 @@ const sketch2 = (p) => {
       }, 1000);
       setTimeout(() => {
         fingerImport = false;
-      }, 500);
+      }, 800);
     }
     
     
@@ -73,6 +73,7 @@ const sketch2 = (p) => {
     p.text("voiceNumber: " + voiceNumber, 10, 180);
     p.text("fingerImport: " + fingerImport, 10, 200);
     p.text("voiceRecognitionBool: " + voiceRecognitionBool, 10,220);
+    p.text("fingerNumber: " + fingerNumber, 10,240);
     
   };
   //draw終わり

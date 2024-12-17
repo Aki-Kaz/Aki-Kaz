@@ -37,61 +37,159 @@
   <script src="voice_recognition.js"></script> 
 
 
+  <link rel="stylesheet" type="text/css" href="style.css" />
     <style>
-        #popup-overlay {
+        #new-popup-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 1);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
             opacity: 1;
             transition: opacity 0.5s ease;
         }
 
-        #popup-icon {
-            max-width: 50%;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        #popup-text {
-            max-width: 80%;
-            text-align: center;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        #popup-button {
+        #popup-background {
             position: absolute;
-            bottom: 50px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(255,0,0,0.5), 
+                rgba(255,165,0,0.5), 
+                rgba(255,255,0,0.5), 
+                rgba(0,255,0,0.5), 
+                rgba(0,0,255,0.5), 
+                rgba(75,0,130,0.5), 
+                rgba(238,130,238,0.5)
+            );
+            background-size: 400% 400%;
+            animation: backgroundAnimation 15s ease infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #popup-scrollable-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        #first-section {
+            width: 100%;
+            height: 100vh;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #inter-title {
+            max-width: 50%;  /* サイズを小さく */
+            opacity: 0.9;
+        }
+
+        #scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        #scroll-bar {
+            width: 20px;
+            height: 100px;
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0.1), 
+                rgba(0,0,0,0.3), 
+                rgba(0,0,0,0.5), 
+                rgba(0,0,0,0.7)
+            );
+            margin-top: 10px;
+        }
+
+        #second-section {
+            width: 100%;
+            height: 120vh;  /* セクションのサイズを大きく */
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #about-text {
+            text-align: left;  /* 左揃え */
+            max-width: 70%;  /* テキストの幅を調整 */
+            font-size: 1em;  /* フォントサイズを小さく */
+            line-height: 1.6;  /* 行間を調整 */
+        }
+
+        #about-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            align-self: center;  /* タイトルは中央に */
+        }
+
+        #inter-button {
+            max-width: 200px;
+            margin-top: 30px;
             cursor: pointer;
         }
 
-        .fade-in {
-            opacity: 1 !important;
+        /* コンテナ3のフェードイン効果 */
+        #container3 {
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
-        .hidden {
-            display: none !important;
+        #container3.fade-in {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div id="popup-overlay">
-        <img id="popup-icon" src="image/interAicon.png" alt="アイコン画像（仮）">
-        <div id="popup-text">
-            このサイトは誰でも指スマを遊べるサイトです！ 目を閉じても、耳を塞いでも遊ぶことができます。 画面の前でピースサインをすると、カウントダウンが始まります。 カウントが0になったタイミングで、親指をあげましょう。 また、プレイヤーはこのタイミングで予想した指の数を宣言しましょう！ まずは、試しにプレイしてみましょう！
+    <div id="new-popup-container">
+        <div id="popup-background"></div>
+        <div id="popup-scrollable-content">
+            <div id="first-section">
+                <img id="inter-title" src="image/InterTitle.png" alt="タイトル">
+                <div id="scroll-indicator">
+                    scroll
+                    <div id="scroll-bar"></div>
+                </div>
+            </div>
+            <div id="second-section">
+                <div id="about-title">About</div>
+                <div id="about-text">
+                    このサイトは誰でも指スマを遊べるサイトです<br>
+                    目を閉じても、耳を塞いでも遊ぶことができます。<br>
+                    画面の前でピースサインをすると、カウントダウンが始まります。 <br>
+                    カウントが0になったタイミングで、親指をあげましょう。 また、プレイヤーはこのタイミングで予想した指の数を宣言しましょう！ 
+                    まずは、試しにプレイしてみましょう！
+                </div>
+                <img id="inter-button" src="image/interButton.png" alt="スタートボタン">
+            </div>
         </div>
-        <img id="popup-button" src="image/interButton.png" alt="閉じるボタン（仮）">
     </div>
 
+    <!-- 以下は既存のコード -->
     <video class="input_video" style="display: none;"></video>
   
     <div id="container3"></div>
@@ -101,39 +199,32 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const popupOverlay = document.getElementById('popup-overlay');
-            const popupIcon = document.getElementById('popup-icon');
-            const popupText = document.getElementById('popup-text');
-            const popupButton = document.getElementById('popup-button');
+            const newPopupContainer = document.getElementById('new-popup-container');
+            const interButton = document.getElementById('inter-button');
+            const container3 = document.getElementById('container3');
 
-            // 初期状態で全コンテナを非表示にする
-            document.getElementById('container2').style.display = 'none';
-            document.getElementById('container1').style.display = 'none';
-            document.getElementById('container4').style.display = 'none';
-            document.getElementById('container3').style.display = 'flex';
+            // 初期状態でコンテナ3を無効化
+            container3.style.pointerEvents = 'none';
+            container3.style.display = 'none';
 
-            // アイコンをフェードイン
-            setTimeout(() => {
-                popupIcon.classList.add('fade-in');
-            }, 500);
-
-            // 説明文をフェードイン
-            setTimeout(() => {
-                popupText.classList.add('fade-in');
-            }, 1500);
-
-            // ボタンクリックでポップアップを削除
-            popupButton.addEventListener('click', () => {
-                popupOverlay.style.opacity = '0';
+            // ポップアップをフェードアウトさせる
+            interButton.addEventListener('click', () => {
+                newPopupContainer.style.opacity = '0';
                 setTimeout(() => {
-                    // ポップアップ要素を完全に削除
-                    document.body.removeChild(popupOverlay);
+                    // ポップアップを削除
+                    document.body.removeChild(newPopupContainer);
                     
-                    // container3のみ表示
-                    document.getElementById('container3').style.display = 'flex';
+                    // コンテナ3を表示し、フェードイン
+                    container3.style.display = 'flex';
+                    setTimeout(() => {
+                        container3.classList.add('fade-in');
+                        container3.style.pointerEvents = 'auto';
+                    }, 50);
                 }, 500);
             });
         });
     </script>
+
+    <!-- 既存のスクリプトタグは全て維持 -->
 </body>
 </html>

@@ -1,27 +1,20 @@
-const isFlipped = true;
+const mainSketch = (p) => {
+  const isFlipped = true; // 映像の左右反転
 
-const sketch1 = (p) => {
   let video;
   let hands;
   let handLandmarks = [];
+  let mode = 2; // モードを切り替える変数 (1: sketch1, 2: sketch4)
 
   p.setup = () => {
     p.createCanvas(640, 480);
 
-    // Web Camera Capture (changed from internal camera)
-    video = p.createCapture({
-      video: {
-        mandatory: {
-          minWidth: 640,
-          minHeight: 480,
-          maxWidth: 640,
-          maxHeight: 480,
-        },
-      },
-    });
+    // Webカメラをキャプチャ
+    video = p.createCapture(p.VIDEO);
     video.size(p.width, p.height);
     video.hide();
 
+    // Mediapipe Handsの初期化
     hands = new Hands({
       locateFile: (file) =>
         `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`,
@@ -29,7 +22,7 @@ const sketch1 = (p) => {
 
     hands.setOptions({
       selfieMode: isFlipped,
-      maxNumHands: 10, // 手の検出可能数
+      maxNumHands: 10,
       modelComplexity: 1,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
@@ -48,7 +41,7 @@ const sketch1 = (p) => {
   };
 
   p.draw = () => {
-    // 映像の描画 左右反転のフラグ
+    // ビデオ映像を描画 (左右反転対応)
     p.push();
     if (isFlipped) {
       p.translate(p.width, 0);
@@ -56,64 +49,70 @@ const sketch1 = (p) => {
     }
     p.image(video, 0, 0, p.width, p.height);
     p.pop();
+    
+    //モード切り替え
+    if(peaceSignMode){
+      mode = 2;
+    }else{
+      mode = 1;
+    }
+    
+    // モードに応じた処理
+    if (mode === 1) {
+      sketch1Draw();
+    } else if (mode === 2) {
+      sketch4Draw();
+    }
 
-    // 手のランドマーク 親指判定
+    // モード表示
+    p.fill(255);
+    p.textSize(16);
+    p.textAlign(p.LEFT, p.TOP);
+    p.text(`Mode: ${mode}`, 10, 10);
+    
+    
+  };
+
+  // 描画処理
+  function sketch1Draw() {
     let thumbsUpCount = 0;
-    if (handLandmarks.length > 0) {
-      for (let landmarks of handLandmarks) {
-        if (landmarks) {
-          drawLandmarks(landmarks);
-          if (isThumbUp(landmarks)) {
-            thumbsUpCount++;
-          }
+    for (let landmarks of handLandmarks) {
+      if (landmarks) {
+        drawLandmarks(landmarks);
+        if (isThumbUp(landmarks)) {
+          thumbsUpCount++;
         }
       }
     }
 
-    // 親指 本数表示
-    //p.textAlign(p.CENTER, p.CENTER);
-    p.textAlign(p.CENTER);
+    // 親指を立てた数を表示
+    p.textAlign(p.CENTER, p.CENTER);
     p.textSize(120);
-    p.textFont("Rowdies");
-    p.stroke(0);
     p.fill(255, 0, 0);
     p.text(thumbsUpCount, p.width / 2, p.height / 2);
     
-    //値のエクスポート
-    //if(fingerImport == true){
+    //エクスポート
+    if(fingerImport){
       fingerNumber = thumbsUpCount;  
-    //}
+    }
     
-  };
-
-  function isThumbUp(landmarks) {
-    // 手のひら（人差し指付け根 to 人差し指第一関節）のベクトル
-    const palmVector = p.createVector(
-      landmarks[6].x - landmarks[5].x,
-      landmarks[6].y - landmarks[5].y
-    );
-
-    // 親指のベクトル
-    const thumbVector = p.createVector(
-      landmarks[4].x - landmarks[2].x,
-      landmarks[4].y - landmarks[2].y
-    );
-
-    // ベクトルの内積　角度計算用
-    const angle = p.degrees(
-      Math.acos(
-        p5.Vector.dot(palmVector, thumbVector) /
-          (palmVector.mag() * thumbVector.mag())
-      )
-    );
-
-    // デバッグ用: コンソールに角度を出力
-    //console.log(`Thumb angle: ${angle}`);
-
-    // 親指立て　角度判定
-    return angle > 45;
   }
 
+  function sketch4Draw() {
+    for (let landmarks of handLandmarks) {
+      if (landmarks) {
+        drawLandmarks(landmarks);
+        recognizeHandShape(landmarks);
+      }
+    }
+  }
+
+  // Mediapipe Handsの結果処理
+  function onResults(results) {
+    handLandmarks = results.multiHandLandmarks || [];
+  }
+
+  // ランドマークの描画
   function drawLandmarks(landmarks) {
     for (let i = 0; i < landmarks.length; i++) {
       if (landmarks[i]) {
@@ -121,15 +120,70 @@ const sketch1 = (p) => {
         let y = landmarks[i].y * p.height;
         p.fill(0, 255, 0);
         p.noStroke();
-        p.ellipse(x, y, 5, 5);
+        p.ellipse(x, y, 10, 10);
       }
     }
   }
 
-  function onResults(results) {
-    handLandmarks = results.multiHandLandmarks || [];
+  // 親指が立っているかの判定
+  function isThumbUp(landmarks) {
+    const palmVector = p.createVector(
+      landmarks[6].x - landmarks[5].x,
+      landmarks[6].y - landmarks[5].y
+    );
+    const thumbVector = p.createVector(
+      landmarks[4].x - landmarks[2].x,
+      landmarks[4].y - landmarks[2].y
+    );
+    const angle = p.degrees(
+      Math.acos(
+        palmVector.dot(thumbVector) / (palmVector.mag() * thumbVector.mag())
+      )
+    );
+    return angle > 45;
+  }
+
+  // 指の形状認識
+  function recognizeHandShape(landmarks) {
+    let result = "";
+    //ピースサイン
+    if (isTwo(landmarks)) {
+      p.fill(0, 255, 0);
+      p.textSize(32);
+      result = "2";
+      //ピースサイン認識後の処理
+      //ピースの認識をオンに
+      isPeaceRecognized = true;
+      //ピースサインモードから指の数の認識に
+      peaceSignMode = false;
+    }
+    else {
+      p.fill(0, 0, 0);
+      p.textSize(32);
+      result = "Unknown";
+    }
+    p.text(result, 10, 40);
+  }
+
+  function isTwo(landmarks) {
+    return (
+      isFingerExtended(landmarks, 8, 7, 6) &&
+      isFingerExtended(landmarks, 12, 11, 10) &&
+      !isFingerExtended(landmarks, 16, 15, 14) &&
+      !isFingerExtended(landmarks, 20, 19, 18)
+    );
+  }
+
+  function isFingerExtended(landmarks, tipIndex, pipIndex, dipIndex) {
+    if (!landmarks[tipIndex] || !landmarks[pipIndex] || !landmarks[dipIndex]) {
+      return false;
+    }
+    const tip = landmarks[tipIndex];
+    const pip = landmarks[pipIndex];
+    const dip = landmarks[dipIndex];
+    return tip.y < pip.y && pip.y < dip.y;
   }
 };
 
-// コンテナにスケッチを割り当て
-new p5(sketch1, "container1");
+// スケッチをインスタンスモードで実行
+new p5(mainSketch, "container1");
