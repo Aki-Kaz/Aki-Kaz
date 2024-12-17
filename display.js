@@ -318,8 +318,8 @@ const sketch3= (p) => {
     p.text("音声認識した数: " + "認識できませんでした", p.width/2, p.height * 0.7);
   }
   const displayResult = () =>{
-    p.text("音声認識した数: " + voiceNumber, centerX / 2, p.height * 0.8);
-    p.text("認識した指の数: " + fingerNumber, centerX / 2, p.height * 0.8);
+    p.text("音声認識した数: " + voiceNumber, p.width/4, p.height * 0.8);
+    p.text("認識した指の数: " + fingerNumber, p.width*3/4, p.height * 0.8);
   }
   const displayCorrect = () => {
     p.text("正解!!", p.width/2, p.height * 0.7);
