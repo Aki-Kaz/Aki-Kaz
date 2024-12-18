@@ -367,6 +367,7 @@ const sketch3= (p) => {
   );
 
   p.fill(0);
+  p.noStroke();
   p.textAlign(p.CENTER, p.CENTER);
   p.textSize(p.width * 0.04);
     p.text("不正解", p.width/2, p.height * 0.7);
