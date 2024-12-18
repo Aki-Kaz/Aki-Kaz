@@ -1,5 +1,3 @@
-// 既存のコードをほぼそのまま維持し、一部を修正
-
 //test
 
 //何も言っていない時：-1にして反応しないように
@@ -71,7 +69,7 @@ const sketch3= (p) => {
       }
     });
 
-    // 虹色背景と半透明オーバーレイの追加
+// 虹色背景と半透明オーバーレイの追加
     const backgroundRainbow = document.createElement('div');
     backgroundRainbow.id = 'background-rainbow';
     document.body.insertBefore(backgroundRainbow, document.body.firstChild);
@@ -80,6 +78,7 @@ const sketch3= (p) => {
     backgroundOverlay.id = 'background-overlay';
     document.body.insertBefore(backgroundOverlay, document.body.firstChild);
   };
+
   
   
   
@@ -93,9 +92,8 @@ const sketch3= (p) => {
       isPeaceRecognized = false;
     }
     
-    p.textFont("ヒラギノ角ゴ ProN"); // フォントの設定
-
-    p.noStroke(); // 青い枠の削除
+    p.background(255,255,255);
+    p.textFont("ヒラギノ角ゴ ProN");
 
     // 動的なテキストサイズ
     const baseFontSize = p.width * 0.04;
@@ -323,6 +321,7 @@ const sketch3= (p) => {
     utterance.lang = "ja-JP"; // 日本語で読み上げ
     speechSynthesis.speak(utterance);
   };
+  
   
   //結果の表示
   const displayError = () => {
