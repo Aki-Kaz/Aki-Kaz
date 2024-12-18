@@ -1,5 +1,4 @@
 //test
-
 //何も言っていない時：-1にして反応しないように
 window.voiceNumber = -1;
 window.fingerNumber = 0;
