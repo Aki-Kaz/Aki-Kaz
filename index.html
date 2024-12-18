@@ -39,39 +39,41 @@
 
 
   <link rel="stylesheet" type="text/css" href="style.css" />
-    <style>
-        #new-popup-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
+  <style>
+      #new-popup-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1000;
+          display: flex;
+          flex-direction: column;
+          opacity: 1;
+          transition: opacity 0.5s ease;
+      }
 
-        #popup-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, 
-                rgba(255,0,0,0.5), 
-                rgba(255,165,0,0.5), 
-                rgba(255,255,0,0.5), 
-                rgba(0,255,0,0.5), 
-                rgba(0,0,255,0.5), 
-                rgba(75,0,130,0.5), 
-                rgba(238,130,238,0.5)
-            );
-            background-size: 400% 400%;
-            animation: backgroundAnimation 15s ease infinite;
-            opacity: 0.7;
-        }
+      #popup-background {
+          position: fixed; /* 変更: fixedに */
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(45deg, 
+              rgba(255,0,0,0.5), 
+              rgba(255,165,0,0.5), 
+              rgba(255,255,0,0.5), 
+              rgba(0,255,0,0.5), 
+              rgba(0,0,255,0.5), 
+              rgba(75,0,130,0.5), 
+              rgba(238,130,238,0.5)
+          );
+          background-size: 400% 400%;
+          animation: backgroundAnimation 15s ease infinite;
+          opacity: 0.7;
+          z-index: -1; /* 下層に配置 */
+      }
+
 
         @keyframes backgroundAnimation {
             0% { background-position: 0% 50%; }
@@ -84,6 +86,7 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            z-index: 1; /* コンテンツを前面に */
         }
 
         #first-section {
@@ -125,20 +128,22 @@
 
         #second-section {
             width: 100%;
-            height: 120vh;  /* セクションのサイズを大きく */
-            background-color: white;
+            height: 120vh;
+            background-color: rgba(255, 255, 255, 0.7); /* 白色を70%の透明度で */
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px); /* オプション：背景にぼかしエフェクトを追加 */
         }
 
         #about-text {
-            text-align: left;  /* 左揃え */
-            max-width: 70%;  /* テキストの幅を調整 */
-            font-size: 1em;  /* フォントサイズを小さく */
-            line-height: 1.6;  /* 行間を調整 */
+            font-family: "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HiraMinProN-W3", "serif";
+            text-align: left;
+            max-width: 70%;
+            font-size: 1em;
+            line-height: 1.6;
         }
 
         #about-title {
@@ -179,12 +184,19 @@
             <div id="second-section">
                 <div id="about-title">About</div>
                 <div id="about-text">
+                    <br>
                     このサイトは誰でも指スマを遊べるサイトです<br>
                     目を閉じても、耳を塞いでも遊ぶことができます。<br>
-                    画面の前でピースサインをすると、カウントダウンが始まります。 <br>
-                    カウントが0になったタイミングで、親指をあげましょう。 <br>
-                    また、プレイヤーはこのタイミングで予想した指の数を宣言しましょう！ <br>
-                    まずは、試しにプレイしてみましょう！
+                    <br>
+                    ① 画面の前でピース✌️をすると、ゲームスタート！ <br>
+                    <br>
+                    ② カウントが0になったら、皆んなで親指をあげよう。 <br>
+                    <br>
+                    ③ プレイヤーはこのタイミングで予想した親指の数を宣言！ <br>
+                    　 宣言した数と、上がっていた親指の本数が同じならプレイヤーの勝利！<br>
+                    <br>
+                    <br>
+                    まずは、試しにプレイしてみよう！
                 </div>
                 <br>
                 <img id="inter-button" src="image/interButton.png" alt="スタートボタン">

@@ -1,3 +1,5 @@
+// 既存のコードをほぼそのまま維持し、一部を修正
+
 //test
 
 //何も言っていない時：-1にして反応しないように
@@ -68,6 +70,15 @@ const sketch3= (p) => {
         console.log(startTime);
       }
     });
+
+    // 虹色背景と半透明オーバーレイの追加
+    const backgroundRainbow = document.createElement('div');
+    backgroundRainbow.id = 'background-rainbow';
+    document.body.insertBefore(backgroundRainbow, document.body.firstChild);
+
+    const backgroundOverlay = document.createElement('div');
+    backgroundOverlay.id = 'background-overlay';
+    document.body.insertBefore(backgroundOverlay, document.body.firstChild);
   };
   
   
@@ -82,9 +93,9 @@ const sketch3= (p) => {
       isPeaceRecognized = false;
     }
     
-    p.background(255,255,255);
-    p.stroke(0, 200, 255);
-    p.strokeWeight(5);
+    p.textFont("ヒラギノ角ゴ ProN"); // フォントの設定
+
+    p.noStroke(); // 青い枠の削除
 
     // 動的なテキストサイズ
     const baseFontSize = p.width * 0.04;
@@ -109,7 +120,7 @@ const sketch3= (p) => {
     
     //何も無い時と検知してすぐの時：currentcommandは0
     if (currentCommand === 0) {
-      p.text("ピースサインで音声認識をスタートします", p.width/2, p.height * 0.5);
+      p.text("ピースサインでゲームスタート！", p.width/2, p.height * 0.5);
       if(peaceSignBool == false){
         speakPeace();
         peaceSignBool = true;
@@ -278,7 +289,7 @@ const sketch3= (p) => {
   
   //読み上げ
   const speakPeace = () => {
-    let utterance = new SpeechSynthesisUtterance("ピースサインで音声認識をスタートします");
+    let utterance = new SpeechSynthesisUtterance("ピースサインでゲームズタート！");
     utterance.lang = "ja-JP"; // 日本語で読み上げ
     speechSynthesis.speak(utterance);
   };
@@ -313,7 +324,6 @@ const sketch3= (p) => {
     speechSynthesis.speak(utterance);
   };
   
-  
   //結果の表示
   const displayError = () => {
     p.textAlign(p.CENTER, p.CENTER);
@@ -324,9 +334,42 @@ const sketch3= (p) => {
     p.text("認識した指の数: " + fingerNumber, p.width*3/4, p.height * 0.8);
   }
   const displayCorrect = () => {
-    p.text("正解!!", p.width/2, p.height * 0.7);
+    // 外側の赤い円（背景）
+  p.fill(255, 0, 0, 100);  // 赤色、透明度を追加
+  p.noStroke();
+  p.ellipse(p.width/2, p.height/2, p.width * 0.3, p.width * 0.3);
+  
+  // 内側の白い円（ドーナツの穴）
+  p.fill(255);  // 白色
+  p.ellipse(p.width/2, p.height/2, p.width * 0.2, p.width * 0.2);
+  
+  // 文字色を黒に戻す
+  p.fill(0);
+  p.textAlign(p.CENTER, p.CENTER);
+  p.textSize(p.width * 0.04);
+  p.text("正解!!", p.width/2, p.height * 0.7);
   }
+
   const displayUncorrect = () => {
+    p.stroke(0, 0, 255,100);  // 青色
+  p.strokeWeight(50);
+  // バツ印の描画
+  p.line(
+    p.width/2 - p.width * 0.15, 
+    p.height/2 - p.width * 0.15, 
+    p.width/2 + p.width * 0.15, 
+    p.height/2 + p.width * 0.15
+  );
+  p.line(
+    p.width/2 + p.width * 0.15, 
+    p.height/2 - p.width * 0.15, 
+    p.width/2 - p.width * 0.15, 
+    p.height/2 + p.width * 0.15
+  );
+
+  p.fill(0);
+  p.textAlign(p.CENTER, p.CENTER);
+  p.textSize(p.width * 0.04);
     p.text("不正解", p.width/2, p.height * 0.7);
   }
   
